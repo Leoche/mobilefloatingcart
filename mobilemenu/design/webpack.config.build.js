@@ -4,12 +4,12 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const processHTMLPages = require('./processHTMLHelper.js');
 const PrettierPlugin = require("prettier-webpack-plugin");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const extractCSS = new ExtractTextPlugin('style.css');
+const extractCSS = new ExtractTextPlugin('../css/mfc.css');
 const ProgressBar = new WebpackBar();
 const plugins = [
   ProgressBar,
   extractCSS,
-].concat(processHTMLPages(true));
+].concat(processHTMLPages());
 
 module.exports = {
   entry: [
@@ -44,8 +44,8 @@ module.exports = {
     extensions: ['.js', '.es6'],
   },
   output: {
-    path: __dirname + '/build',
-    filename: 'index.js',
+    path: __dirname + '/../views/js/',
+    filename: 'mfc.js',
   },
   devServer: {
     contentBase: './source'

@@ -137,6 +137,7 @@ body {
     list-style: none;
     overflow: scroll;
     overflow-x: hidden;
+    flex-grow: 1;
 
     justify-content: space-between;
     & li {
@@ -146,7 +147,9 @@ body {
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid #DDD;
-
+      &:last-child {
+        border-bottom: none;
+      }
       &.mfc-active {
         & .mfc-more{
           max-height: 100em;

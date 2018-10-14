@@ -317,6 +317,9 @@ body {
   overflow-x: hidden;
   list-style: none;
 
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
@@ -337,6 +340,9 @@ body {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+#mfc-cart ul.mfc-products li:last-child {
+  border-bottom: none;
 }
 #mfc-cart ul.mfc-products li.mfc-active .mfc-more {
   max-height: 100em;

@@ -27,7 +27,7 @@
   "scripts": {
     "start": "webpack-dev-server --host 0.0.0.0 --mode=development",
     "prebuild": "rm -rf build",
-    "build": "webpack -p && csscomb -c /home/leo/.config/.csscomb.json ../views/css"
+    "build": "webpack -p --config webpack.config.build.js && csscomb -c /home/leo/.config/.csscomb.json ../views/css"
   },
   "devDependencies": {
     "autoprefixer": "^8.5.0",
