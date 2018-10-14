@@ -10,7 +10,7 @@ module.exports = () => {
     const filename = document.replace(sourcePath, '');
     return new HtmlWebpackPlugin({
       template: document,
-      filename,
+      filename: '../templates/template.html',
       hash: true,
     });
   });
