@@ -50,8 +50,5 @@ module.exports = {
   devServer: {
     contentBase: './source'
   },
-  plugins,
-  optimization: {
-    minimizer: []
-  }
+  plugins
 };
