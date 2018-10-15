@@ -25,9 +25,9 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --host 0.0.0.0 --mode=development",
+    "start": "webpack-dev-server --mode=development",
     "prebuild": "rm -rf build",
-    "build": "webpack -p --config webpack.config.build.js && csscomb -c /home/leo/.config/.csscomb.json ../views/css"
+    "build": "webpack -p --config webpack.config.build.js"
   },
   "devDependencies": {
     "autoprefixer": "^8.5.0",

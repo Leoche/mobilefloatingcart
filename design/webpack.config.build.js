@@ -13,7 +13,7 @@ const plugins = [
 
 module.exports = {
   entry: [
-    'webpack-dev-server/client?http://localhost:8080',
+    "webpack-dev-server --mode=development",
     './source/index.js'
   ],
   module: {

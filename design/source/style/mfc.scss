@@ -16,6 +16,7 @@ body {
   border-radius: 50%;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   transition: background 0.8s;
+  z-index: 9999;
 
   justify-content: center;
   align-items: center;
@@ -31,23 +32,36 @@ body {
     transition: background 0s;
   }
 
+  & svg, & img {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    transition: all 0.3s;
+    width: 24px;
+    height: 24px;
+
+    &.mfc-icon-close {
+      opacity: 0;
+    }
+  }
+
   & svg {
     position: absolute;
     right: 16px;
     bottom: 16px;
     transition: all 0.3s;
 
-    & .mfc-icon-close {
+    &.mfc-icon-close {
       opacity: 0;
     }
   }
 
   &.mfc-active {
-    & svg {
+    background: #111 !important;
+    & svg, & img {
       transform: rotate(180deg);
     }
-
-    & .mfc-icon-cart {
+    & .mfc-icon-cart, & img {
       opacity: 0;
     }
 
@@ -59,9 +73,10 @@ body {
 #mfc-cart {
   position: fixed;
   top: 16px;
+  z-index: 9999;
   left: 16px;
-  width: calc(100% - 64px);
-  height: calc(100% - 136px);
+  width: calc(100% - 32px);
+  height: calc(100% - 104px);
   padding: 16px;
   background: #fefefe;
   border-radius: 10px;
@@ -72,6 +87,7 @@ body {
   transform-origin: calc(100% - 54px) 100%;
   display: flex;
   flex-direction: column;
+  pointer-events: none;
 
   &:after{
     content:"";
@@ -96,6 +112,7 @@ body {
   &.mfc-active {
     opacity: 1;
     transform: scale(1) translateY(0);
+    pointer-events: auto;
   }
   & .mfc-header{
     display: flex;

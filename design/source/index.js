@@ -1,5 +1,4 @@
 import './style/mfc.scss';
-import './style/mfc-configurator.scss';
 
 document.querySelector('#mfc-button').addEventListener('click', () => {
   document.querySelector('#mfc-button').classList.toggle('mfc-active');

@@ -2,8 +2,7 @@ require('webpack');
 const WebpackBar = require('webpackbar');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const processHTMLPages = require('./processHTMLHelper.js');
-const PrettierPlugin = require("prettier-webpack-plugin");
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
 const extractCSS = new ExtractTextPlugin('style.css');
 const ProgressBar = new WebpackBar();
 const plugins = [
@@ -22,7 +21,7 @@ module.exports = {
         test: [/\.scss$/i, /\.sass$/i, /\.css$/],
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: ['css-loader?-minimize',  'postcss-loader', 'sass-loader?outputStyle=uncompressed']
+          use: ['css-loader', 'postcss-loader', 'sass-loader']
         })
       },
       {
@@ -50,5 +49,6 @@ module.exports = {
   devServer: {
     contentBase: './source'
   },
-  plugins
+  plugins,
 };
+ // && csscomb -c /home/leo/.config/.csscomb.json ../views/css
