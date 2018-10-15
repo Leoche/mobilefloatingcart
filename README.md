@@ -3,5 +3,5 @@
 
  ## Preview
 <p align="center">
-  <img src="./mobilefloatingcart/design/medias/preview.png">
+  <img src="./design/medias/preview.png">
 </p>
