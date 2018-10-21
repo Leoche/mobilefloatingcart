@@ -48,14 +48,14 @@ class Mobilefloatingcart extends Module
             Shop::setContext(Shop::CONTEXT_ALL);
         }
 
-        return parent::install() &&
-            $this->registerHook('displayFooterAfter') &&
-            $this->registerHook('displayHeader') &&
-            Configuration::updateValue('MFC_COLOR', '#454545');
-            Configuration::updateValue('MFC_ICON', null);
-            Configuration::updateValue('MFC_HIDDENONCARTEMPTY', false);
-            Configuration::updateValue('MFC_SHOWONDESKTOP', false);
-            Configuration::updateValue('MFC_ZINDEX', 9999);
+        return parent::install()
+            && $this->registerHook('displayFooterAfter')
+            && $this->registerHook('displayHeader')
+            && Configuration::updateValue('MFC_COLOR', '#454545')
+            && Configuration::updateValue('MFC_ICON', null)
+            && Configuration::updateValue('MFC_HIDDENONCARTEMPTY', false)
+            && Configuration::updateValue('MFC_SHOWONDESKTOP', false)
+            && Configuration::updateValue('MFC_ZINDEX', 99999);
     }
 
     public function uninstall()
@@ -65,7 +65,7 @@ class Mobilefloatingcart extends Module
             && Configuration::deleteByName('MFC_HIDDENONCARTEMPTY')
             && Configuration::deleteByName('MFC_SHOWONDESKTOP')
             && Configuration::deleteByName('MFC_ZINDEX')
-            && parent::uninstall()
+            && parent::uninstall();
         ;
     }
 
@@ -108,7 +108,7 @@ class Mobilefloatingcart extends Module
             $mfc_hiddenoncartempty = strval(Tools::getValue('MFC_HIDDENONCARTEMPTY'));
             $mfc_showondesktop = strval(Tools::getValue('MFC_SHOWONDESKTOP'));
             $mfc_zindex = strval(Tools::getValue('MFC_ZINDEX'));
-            
+
             Configuration::updateValue('MFC_COLOR', $mfc_color);
             Configuration::updateValue('MFC_HIDDENONCARTEMPTY', $mfc_hiddenoncartempty);
             Configuration::updateValue('MFC_SHOWONDESKTOP', $mfc_showondesktop);
@@ -233,7 +233,7 @@ class Mobilefloatingcart extends Module
     {
         $this->context->smarty->assign([
             'MFC_COLOR' => Configuration::get('MFC_COLOR'),
-            'MFC_ICON' => $this->_path . 'img/' . Configuration::get('MFC_ICON'),
+            'MFC_ICON' => (Configuration::get('MFC_ICON') != null) ? $this->_path . 'img/' . Configuration::get('MFC_ICON') : null,
             'MFC_HIDDENONCARTEMPTY' => Configuration::get('MFC_HIDDENONCARTEMPTY'),
             'MFC_SHOWONDESKTOP' => Configuration::get('MFC_SHOWONDESKTOP'),
             'MFC_ZINDEX' => Configuration::get('MFC_ZINDEX')
@@ -244,8 +244,17 @@ class Mobilefloatingcart extends Module
 
     public function hookDisplayHeader()
     {
-      // $this->context->controller->addJS('http://localhost:8080/index.js', 'all');
-      // $this->context->controller->addJS($this->_path.'views/js/mfc.js', 'all');
-      //$this->context->controller->addCSS($this->_path.'views/css/mfc.css', 'all');
+      // $this->context->controller->addJS($this->_path.'views/js/mfc.js');
+      // $this->context->controller->addCSS($this->_path.'views/css/mfc.css', 'all');
+      $this->context->controller->registerJavascript(
+          'mfc-js',
+          'http://localhost:8080/index.js',
+          array('server' => 'remote', 'position' => 'bottom', 'priority' => 150)
+      );
+      $this->context->controller->registerStylesheet(
+          'mfc-css',
+          'http://localhost:8080/style.css',
+          array('server' => 'remote', 'position' => 'top', 'priority' => 150)
+      );
     }
 }
