@@ -94,12 +94,20 @@ class Mobilefloatingcart extends Module
                     $ext = Tools::substr($_FILES['MFC_ICON']['name'], strrpos($_FILES['MFC_ICON']['name'], '.') + 1);
                     $file_name = md5($_FILES['MFC_ICON']['name']).'.'.$ext;
 
-                    if (!move_uploaded_file($_FILES['MFC_ICON']['tmp_name'], dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$file_name)) {
-                        return $this->displayError($this->trans('An error occurred while attempting to upload the file.', array(), 'Admin.Notifications.Error'));
+                    if (!move_uploaded_file(
+                      $_FILES['MFC_ICON']['tmp_name'],
+                      dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$file_name)
+                    ) {
+                        return $this->displayError($this->trans(
+                          'An error occurred while attempting to upload the file.',
+                          array(),
+                          'Admin.Notifications.Error')
+                        );
                     } else {
+                        $path = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR;
                         if (Configuration::hasContext('MFC_ICON', null, Shop::getContext())
                             && Configuration::get('MFC_ICON', null) != $file_name) {
-                            @unlink(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . Configuration::get('BANNER_IMG', null));
+                            @unlink($path . Configuration::get('BANNER_IMG', null));
                         }
 
                         $values['MFC_ICON'] = $file_name;
@@ -123,7 +131,11 @@ class Mobilefloatingcart extends Module
             Configuration::updateValue('MFC_SHOWONDESKTOP', $mfc_showondesktop);
             Configuration::updateValue('MFC_ZINDEX', $mfc_zindex);
 
-            return $this->displayConfirmation($this->trans('The settings have been updated.', array(), 'Admin.Notifications.Success'));
+            return $this->displayConfirmation($this->trans(
+              'The settings have been updated.',
+              array(),
+              'Admin.Notifications.Success')
+            );
         }
 
         return '';
@@ -142,7 +154,11 @@ class Mobilefloatingcart extends Module
         $fields_form = array(
             'form' => array(
                 'legend' => array(
-                    'title' => $this->trans('Mobile floating cart settings', array(), 'Modules.Mobilefloatingcart.Admin'),
+                    'title' => $this->trans(
+                      'Mobile floating cart settings',
+                      array(),
+                      'Modules.Mobilefloatingcart.Admin'
+                    ),
                     'icon' => 'icon-shopping-cart'
                 ),
                 'input' => array(
@@ -202,7 +218,9 @@ class Mobilefloatingcart extends Module
                         'type' => 'text',
                         'label' => $this->trans('Z-Index of the button', array(), 'Modules.Mobilefloatingcart.Admin'),
                         'name' => 'MFC_ZINDEX',
-                        'desc' => $this->trans('Increase the value if this module is displayed below other elements of your theme.', array(), 'Modules.Mobilefloatingcart.Admin'),
+                        'desc' => $this->trans('Increase the value if this module is displayed below other elements of your theme.',
+                        array(),
+                        'Modules.Mobilefloatingcart.Admin'),
                         'required' => true,
                     ),
                 ),
@@ -256,14 +274,14 @@ class Mobilefloatingcart extends Module
         // $this->context->controller->addJS($this->_path.'views/js/mfc.js');
         // $this->context->controller->addCSS($this->_path.'views/css/mfc.css', 'all');
         $this->context->controller->registerJavascript(
-          'mfc-js',
-          'http://localhost:8080/index.js',
-          array('server' => 'remote', 'position' => 'bottom', 'priority' => 150)
-      );
+            'mfc-js',
+            'http://localhost:8080/index.js',
+            array('server' => 'remote', 'position' => 'bottom', 'priority' => 150)
+        );
         $this->context->controller->registerStylesheet(
-          'mfc-css',
-          'http://localhost:8080/style.css',
-          array('server' => 'remote', 'position' => 'top', 'priority' => 150)
-      );
+            'mfc-css',
+            'http://localhost:8080/style.css',
+            array('server' => 'remote', 'position' => 'top', 'priority' => 150)
+        );
     }
 }
