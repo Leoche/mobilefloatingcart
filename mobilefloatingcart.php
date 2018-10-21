@@ -266,7 +266,7 @@ class Mobilefloatingcart extends Module
             'MFC_ZINDEX' => Configuration::get('MFC_ZINDEX')
           ));
 
-        return $this->display(__FILE__, 'mobilefloatingcart.tpl');
+        return $this->display(__FILE__, 'templates/front/mobilefloatingcart.tpl');
     }
 
     public function hookDisplayHeader()

@@ -26,7 +26,7 @@ var MFC_REFRESH_URI = "{$link->getModuleLink('mobilefloatingcart', 'ajax', array
 </script>
 <div id="mfc-cart" class="mfc-active" style="{if $MFC_ZINDEX} z-index:{$MFC_ZINDEX};{/if}">
   <div class="mfc-cart-container">
-    {include 'module:mobilefloatingcart/mobilefloatingcart-content.tpl'}
+    {include 'module:mobilefloatingcart/templates/front/mobilefloatingcart-content.tpl'}
   </div>
   <div class="mfc-cart-loader">
     <div class="mfc-loader">
