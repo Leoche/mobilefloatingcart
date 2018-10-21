@@ -1,5 +1,17 @@
 <?php
 /*
+* 2018 Léo DESIGAUX
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Academic Free License (AFL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/afl-3.0.php
+* If you did not receive a copy of the license and are unable to
+* obtain it through the world-wide-web, please send an email
+* to license@prestashop.com so we can send you a copy immediately.
+*
 * DISCLAIMER
 *
 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
@@ -7,9 +19,9 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author Léo DESIGAUX <leodesigaux@gmail.com>
+*  @copyright  2018 Léo DESIGAUX
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -17,23 +29,22 @@ if (!defined('_PS_VERSION_')) {
 
 class Mobilefloatingcart extends Module
 {
-
     public function __construct()
     {
         $this->name = 'mobilefloatingcart';
         $this->author = 'Léo DESIGAUX';
         $this->tab = 'front_office_features';
         $this->version = '1.0.0';
-    		$this->need_instance = 0;
+        $this->need_instance = 0;
 
         $this->bootstrap = true;
 
         parent::__construct();
 
-        $this->displayName = $this->trans('Mobile Floating Cart', [], 'Modules.Mobilefloatingcart.Admin');
+        $this->displayName = $this->trans('Mobile Floating Cart', array(), 'Modules.Mobilefloatingcart.Admin');
         $this->description = $this->trans(
             'Add a floating cart module for mobile.',
-            [],
+            array(),
             'Modules.Mobilefloatingcart.Admin'
         );
         $this->ps_versions_compliancy = array('min' => '1.7.2.0', 'max' => _PS_VERSION_);
@@ -86,7 +97,7 @@ class Mobilefloatingcart extends Module
                     if (!move_uploaded_file($_FILES['MFC_ICON']['tmp_name'], dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$file_name)) {
                         return $this->displayError($this->trans('An error occurred while attempting to upload the file.', array(), 'Admin.Notifications.Error'));
                     } else {
-                        if (Configuration::hasContext('MFC_ICON',null, Shop::getContext())
+                        if (Configuration::hasContext('MFC_ICON', null, Shop::getContext())
                             && Configuration::get('MFC_ICON', null) != $file_name) {
                             @unlink(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . Configuration::get('BANNER_IMG', null));
                         }
@@ -118,10 +129,10 @@ class Mobilefloatingcart extends Module
         return '';
     }
 
-     public function getContent()
-     {
-         return $this->postProcess().$this->displayForm();
-     }
+    public function getContent()
+    {
+        return $this->postProcess().$this->displayForm();
+    }
 
     /**
      * @return string
@@ -229,27 +240,27 @@ class Mobilefloatingcart extends Module
 
     public function hookDisplayFooterAfter($params)
     {
-        $this->context->smarty->assign([
+        $this->context->smarty->assign(array(
             'MFC_COLOR' => Configuration::get('MFC_COLOR'),
             'MFC_ICON' => (Configuration::get('MFC_ICON') != null) ? $this->_path . 'img/' . Configuration::get('MFC_ICON') : null,
             'MFC_HIDDENONCARTEMPTY' => Configuration::get('MFC_HIDDENONCARTEMPTY'),
             'MFC_SHOWONDESKTOP' => Configuration::get('MFC_SHOWONDESKTOP'),
             'MFC_ZINDEX' => Configuration::get('MFC_ZINDEX')
-          ]);
+          ));
 
-          return $this->display(__FILE__, 'mobilefloatingcart.tpl');
+        return $this->display(__FILE__, 'mobilefloatingcart.tpl');
     }
 
     public function hookDisplayHeader()
     {
-      // $this->context->controller->addJS($this->_path.'views/js/mfc.js');
-      // $this->context->controller->addCSS($this->_path.'views/css/mfc.css', 'all');
-      $this->context->controller->registerJavascript(
+        // $this->context->controller->addJS($this->_path.'views/js/mfc.js');
+        // $this->context->controller->addCSS($this->_path.'views/css/mfc.css', 'all');
+        $this->context->controller->registerJavascript(
           'mfc-js',
           'http://localhost:8080/index.js',
           array('server' => 'remote', 'position' => 'bottom', 'priority' => 150)
       );
-      $this->context->controller->registerStylesheet(
+        $this->context->controller->registerStylesheet(
           'mfc-css',
           'http://localhost:8080/style.css',
           array('server' => 'remote', 'position' => 'top', 'priority' => 150)
