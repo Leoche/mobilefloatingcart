@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
-    <name>mobilemenu</name>
-    <displayName><![CDATA[Mobile Menu]]></displayName>
-    <version><![CDATA[1.0]]></version>
-    <description><![CDATA[Add a customizable menu for mobile.]]></description>
+    <name>mobilefloatingcart</name>
+    <displayName><![CDATA[Mobile Floating Cart]]></displayName>
+    <version><![CDATA[1.0.0]]></version>
+    <description><![CDATA[Add a floating cart module for mobile.]]></description>
     <author><![CDATA[Léo DESIGAUX]]></author>
     <tab><![CDATA[front_office_features]]></tab>
     <confirmUninstall>Are you sure you want to uninstall?</confirmUninstall>

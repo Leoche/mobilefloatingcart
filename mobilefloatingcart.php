@@ -66,13 +66,11 @@ class Mobilefloatingcart extends Module
             && Configuration::deleteByName('MFC_SHOWONDESKTOP')
             && Configuration::deleteByName('MFC_ZINDEX')
             && parent::uninstall();
-        ;
     }
 
     public function postProcess()
     {
         if (Tools::isSubmit('submit'.$this->name)) {
-            $languages = Language::getLanguages(false);
             $values = array();
             $update_images_values = false;
 
@@ -82,7 +80,7 @@ class Mobilefloatingcart extends Module
                 if ($error = ImageManager::validateUpload($_FILES['MFC_ICON'], 4000000)) {
                     return $error;
                 } else {
-                    $ext = substr($_FILES['MFC_ICON']['name'], strrpos($_FILES['MFC_ICON']['name'], '.') + 1);
+                    $ext = Tools::substr($_FILES['MFC_ICON']['name'], strrpos($_FILES['MFC_ICON']['name'], '.') + 1);
                     $file_name = md5($_FILES['MFC_ICON']['name']).'.'.$ext;
 
                     if (!move_uploaded_file($_FILES['MFC_ICON']['tmp_name'], dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$file_name)) {
@@ -104,10 +102,10 @@ class Mobilefloatingcart extends Module
             }
 
 
-            $mfc_color = strval(Tools::getValue('MFC_COLOR'));
-            $mfc_hiddenoncartempty = strval(Tools::getValue('MFC_HIDDENONCARTEMPTY'));
-            $mfc_showondesktop = strval(Tools::getValue('MFC_SHOWONDESKTOP'));
-            $mfc_zindex = strval(Tools::getValue('MFC_ZINDEX'));
+            $mfc_color = (string) Tools::getValue('MFC_COLOR');
+            $mfc_hiddenoncartempty = (string) Tools::getValue('MFC_HIDDENONCARTEMPTY');
+            $mfc_showondesktop = (string) Tools::getValue('MFC_SHOWONDESKTOP');
+            $mfc_zindex = (string) Tools::getValue('MFC_ZINDEX');
 
             Configuration::updateValue('MFC_COLOR', $mfc_color);
             Configuration::updateValue('MFC_HIDDENONCARTEMPTY', $mfc_hiddenoncartempty);
