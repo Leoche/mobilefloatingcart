@@ -18,14 +18,13 @@ if (!defined('_PS_VERSION_')) {
 
 class Mobilefloatingcart extends Module
 {
-
     public function __construct()
     {
         $this->name = 'mobilefloatingcart';
         $this->author = 'Léo DESIGAUX';
         $this->tab = 'front_office_features';
         $this->version = '1.0.0';
-    		$this->need_instance = 0;
+        $this->need_instance = 0;
 
         $this->bootstrap = true;
 
@@ -87,7 +86,7 @@ class Mobilefloatingcart extends Module
                     if (!move_uploaded_file($_FILES['MFC_ICON']['tmp_name'], dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$file_name)) {
                         return $this->displayError($this->trans('An error occurred while attempting to upload the file.', array(), 'Admin.Notifications.Error'));
                     } else {
-                        if (Configuration::hasContext('MFC_ICON',null, Shop::getContext())
+                        if (Configuration::hasContext('MFC_ICON', null, Shop::getContext())
                             && Configuration::get('MFC_ICON', null) != $file_name) {
                             @unlink(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . Configuration::get('BANNER_IMG', null));
                         }
@@ -119,10 +118,10 @@ class Mobilefloatingcart extends Module
         return '';
     }
 
-     public function getContent()
-     {
-         return $this->postProcess().$this->displayForm();
-     }
+    public function getContent()
+    {
+        return $this->postProcess().$this->displayForm();
+    }
 
     /**
      * @return string
@@ -238,19 +237,19 @@ class Mobilefloatingcart extends Module
             'MFC_ZINDEX' => Configuration::get('MFC_ZINDEX')
           ));
 
-          return $this->display(__FILE__, 'views/templates/hook/mobilefloatingcart.tpl');
+        return $this->display(__FILE__, 'views/templates/hook/mobilefloatingcart.tpl');
     }
 
     public function hookDisplayHeader()
     {
-      // $this->context->controller->addJS($this->_path.'views/js/mfc.js');
-      // $this->context->controller->addCSS($this->_path.'views/css/mfc.css', 'all');
-      $this->context->controller->registerJavascript(
+        // $this->context->controller->addJS($this->_path.'views/js/mfc.js');
+        // $this->context->controller->addCSS($this->_path.'views/css/mfc.css', 'all');
+        $this->context->controller->registerJavascript(
           'mfc-js',
           'http://localhost:8080/index.js',
           array('server' => 'remote', 'position' => 'bottom', 'priority' => 150)
       );
-      $this->context->controller->registerStylesheet(
+        $this->context->controller->registerStylesheet(
           'mfc-css',
           'http://localhost:8080/style.css',
           array('server' => 'remote', 'position' => 'top', 'priority' => 150)
