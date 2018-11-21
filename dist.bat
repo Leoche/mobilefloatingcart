@@ -4,6 +4,9 @@ echo mobilefloatingcart :
 echo removing dist...
 rmdir /s /q dist
 
+echo removing mobilefloatingcart.zip...
+del mobilefloatingcart.zip
+
 echo creating dist...
 mkdir dist
 
