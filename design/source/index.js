@@ -1,10 +1,9 @@
 import './style/mfc.scss';
 
-
-
 jQuery(document).ready(($) => { // eslint-disable-line no-undef
-  $(document).on('click', '.material-ripple', function(event) {
+  $(document).on('click', '.mfc-material-ripple', function(event) {
     var surface = $(this);
+    console.log("de");
     if (surface.find(".material-ink").length == 0) {
       surface.prepend("<div class='material-ink'></div>");
     }
@@ -28,7 +27,6 @@ jQuery(document).ready(($) => { // eslint-disable-line no-undef
     event.currentTarget.closest('li').classList.toggle('mfc-active');
   });
   $('#mfc-button').on('click', (event) => {
-    event.stopPropagation();
     $('#mfc-button, #mfc-cart').toggleClass('mfc-active');
   });
   $('body').on('click', '.mfc-action', (event) => {
@@ -54,16 +52,70 @@ jQuery(document).ready(($) => { // eslint-disable-line no-undef
 
       }, 'json');
       $.post(MFC_REFRESH_URI.replace(/&amp;/g, '&'), {}, (resp) => {
-        $('.mfc-cart-container').html(resp['mfc-content']);
-        $('.mfc-cart-loader').removeClass("mfc-active");
+        updateMFC(resp['mfc-json'], resp['mfc-content']);
       }, 'json');
     }, 'json');
   });
   prestashop.on('updatedCart', function (event) {
-    console.log();
     $.post(MFC_REFRESH_URI.replace(/&amp;/g, '&'), {}, (resp) => {
-      $('.mfc-cart-container').html(resp['mfc-content']);
-      $('.mfc-cart-loader').removeClass("mfc-active");
+        updateMFC(resp['mfc-json'], resp['mfc-content']);
     }, 'json');
   });
 });
+
+function updateMFC(json, resp) {
+  console.log(resp);
+  prestashop.cart = json;
+  // Update totals and miscs
+  $('.js-subtotal').html(json.summary_string)
+  $('.cart-total .value').html(json.totals.total.value)
+  $('.mfc-total .mfc-value').html(json.totals.total.value)
+  $('.mfc-total-details.mfc-total-products .mfc-value').html(prestashop.cart.subtotals.products.value)
+  $('.mfc-total-details.mfc-total-shipping .mfc-value').html(
+    prestashop.cart.subtotals.shipping.value.charAt(0).toUpperCase() + prestashop.cart.subtotals.shipping.value.slice(1)
+  )
+  $('.mfc-cart-loader').removeClass("mfc-active");
+
+  if (!$('#mfc-cart').hasClass('mfc-active')) {
+    $('.mfc-cart-container').html(resp);
+  } else {
+    console.log("deeeeeeeeeeeeeeee")
+    //Removing deleted products
+    $('.mfc-products li').each((index, item) => {
+      let id_product = item.dataset.idproduct;
+      let id_shop = item.dataset.idshop;
+      let exist = false;
+      for (var i = prestashop.cart.products.length - 1; i >= 0; i--) {
+        if (prestashop.cart.products[i].id_product == id_product &&
+            prestashop.cart.products[i].id_shop == id_shop)
+          exist = true;
+      }
+      if (!exist) item.remove();
+    });
+    $('.mfc-products li').each((index, item) => {
+      let id_product = item.dataset.idproduct;
+      let id_shop = item.dataset.idshop;
+      for (var i = prestashop.cart.products.length - 1; i >= 0; i--) {
+        if (prestashop.cart.products[i].id_product == id_product &&
+            prestashop.cart.products[i].id_shop == id_shop) {
+            let dataProduct = prestashop.cart.products[i];
+            $(item).find('.mfc-quantity .value, .mfc-quantity-selector span').html(dataProduct.cart_quantity);
+
+            if (dataProduct.cart_quantity == dataProduct.stock_quantity) {
+              $(item).find('.js-increase-product-quantity').attr('disabled', 'disabled');
+            } else {
+              $(item).find('.js-increase-product-quantity').removeAttr('disabled');
+            }
+
+            if (dataProduct.cart_quantity == 1) {
+              $(item).find('.js-decrease-product-quantity').attr('disabled', 'disabled');
+            } else {
+              $(item).find('.js-decrease-product-quantity').removeAttr('disabled');
+            }
+            
+            $(item).find('.mfc-price .value').html(dataProduct.total);
+        }
+      }
+    });
+  }
+}

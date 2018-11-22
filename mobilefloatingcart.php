@@ -52,15 +52,17 @@ class Mobilefloatingcart extends Module
             && $this->registerHook('displayFooterAfter')
             && $this->registerHook('displayHeader')
             && Configuration::updateValue('MFC_COLOR', '#454545')
+            && Configuration::updateValue('MFC_ICONCOLOR', '#FEFEFE')
             && Configuration::updateValue('MFC_ICON', null)
             && Configuration::updateValue('MFC_HIDDENONCARTEMPTY', false)
-            && Configuration::updateValue('MFC_SHOWONDESKTOP', false)
+            && Configuration::updateValue('MFC_SHOWONDESKTOP', true)
             && Configuration::updateValue('MFC_ZINDEX', 99999);
     }
 
     public function uninstall()
     {
         return Configuration::deleteByName('MFC_COLOR')
+            && Configuration::deleteByName('MFC_ICONCOLOR')
             && Configuration::deleteByName('MFC_ICON')
             && Configuration::deleteByName('MFC_HIDDENONCARTEMPTY')
             && Configuration::deleteByName('MFC_SHOWONDESKTOP')
@@ -82,8 +84,8 @@ class Mobilefloatingcart extends Module
                 } else {
                     $ext = Tools::substr($_FILES['MFC_ICON']['name'], strrpos($_FILES['MFC_ICON']['name'], '.') + 1);
                     $file_name = md5($_FILES['MFC_ICON']['name']).'.'.$ext;
-
-                    if (!move_uploaded_file($_FILES['MFC_ICON']['tmp_name'], dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$file_name)) {
+                    $file_dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR;
+                    if (!move_uploaded_file($_FILES['MFC_ICON']['tmp_name'], $file_dir . $file_name)) {
                         return $this->displayError(
                             $this->trans(
                                 'An error occurred while attempting to upload the file.',
@@ -94,7 +96,7 @@ class Mobilefloatingcart extends Module
                     } else {
                         if (Configuration::hasContext('MFC_ICON', null, Shop::getContext())
                             && Configuration::get('MFC_ICON', null) != $file_name) {
-                            @unlink(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . Configuration::get('BANNER_IMG', null));
+                            @unlink($file_dir . Configuration::get('BANNER_IMG', null));
                         }
 
                         $values['MFC_ICON'] = $file_name;
@@ -109,11 +111,13 @@ class Mobilefloatingcart extends Module
 
 
             $mfc_color = (string) Tools::getValue('MFC_COLOR');
+            $mfc_iconcolor = (string) Tools::getValue('MFC_ICONCOLOR');
             $mfc_hiddenoncartempty = (string) Tools::getValue('MFC_HIDDENONCARTEMPTY');
             $mfc_showondesktop = (string) Tools::getValue('MFC_SHOWONDESKTOP');
             $mfc_zindex = (string) Tools::getValue('MFC_ZINDEX');
 
             Configuration::updateValue('MFC_COLOR', $mfc_color);
+            Configuration::updateValue('MFC_ICONCOLOR', $mfc_iconcolor);
             Configuration::updateValue('MFC_HIDDENONCARTEMPTY', $mfc_hiddenoncartempty);
             Configuration::updateValue('MFC_SHOWONDESKTOP', $mfc_showondesktop);
             Configuration::updateValue('MFC_ZINDEX', $mfc_zindex);
@@ -155,6 +159,11 @@ class Mobilefloatingcart extends Module
                         'name' => 'MFC_COLOR',
                     ),
                     array(
+                        'type' => 'color',
+                        'label' => $this->trans('Color of icon in button', array(), 'Modules.Mobilefloatingcart.Admin'),
+                        'name' => 'MFC_ICONCOLOR',
+                    ),
+                    array(
                         'type' => 'file',
                         'label' => $this->trans('Icon of button', array(), 'Modules.Mobilefloatingcart.Admin'),
                         'name' => 'MFC_ICON',
@@ -167,7 +176,11 @@ class Mobilefloatingcart extends Module
                     ),
                     array(
                         'type' => 'switch',
-                        'label' => $this->trans('Hidden if cart is empty?', array(), 'Modules.Mobilefloatingcart.Admin'),
+                        'label' => $this->trans(
+                            'Hidden if cart is empty?',
+                            array(),
+                            'Modules.Mobilefloatingcart.Admin'
+                        ),
                         'name' => 'MFC_HIDDENONCARTEMPTY',
                         'required' => true,
                         'is_bool' => true,
@@ -254,6 +267,7 @@ class Mobilefloatingcart extends Module
     {
         return array(
             'MFC_COLOR' => Tools::getValue('MFC_COLOR', Configuration::get('MFC_COLOR')),
+            'MFC_ICONCOLOR' => Tools::getValue('MFC_ICONCOLOR', Configuration::get('MFC_ICONCOLOR')),
             'MFC_ICON' => Tools::getValue('MFC_ICON', Configuration::get('MFC_ICON')),
             'MFC_HIDDENONCARTEMPTY' => Tools::getValue(
                 'MFC_HIDDENONCARTEMPTY',
@@ -268,6 +282,7 @@ class Mobilefloatingcart extends Module
     {
         $this->context->smarty->assign(array(
             'MFC_COLOR' => Configuration::get('MFC_COLOR'),
+            'MFC_ICONCOLOR' => Configuration::get('MFC_ICONCOLOR'),
             'MFC_ICON' => (Configuration::get('MFC_ICON') != null) ?
             $this->_path . 'img/' . Configuration::get('MFC_ICON') :
             null,
@@ -284,14 +299,14 @@ class Mobilefloatingcart extends Module
         // $this->context->controller->addJS($this->_path.'views/js/mfc.js');
         // $this->context->controller->addCSS($this->_path.'views/css/mfc.css', 'all');
         $this->context->controller->registerJavascript(
-          'mfc-js',
-          'http://localhost:8080/index.js',
-          array('server' => 'remote', 'position' => 'bottom', 'priority' => 150)
-      );
+            'mfc-js',
+            'http://localhost:8080/index.js',
+            array('server' => 'remote', 'position' => 'bottom', 'priority' => 150)
+        );
         $this->context->controller->registerStylesheet(
-          'mfc-css',
-          'http://localhost:8080/style.css',
-          array('server' => 'remote', 'position' => 'top', 'priority' => 150)
-      );
+            'mfc-css',
+            'http://localhost:8080/style.css',
+            array('server' => 'remote', 'position' => 'top', 'priority' => 150)
+        );
     }
 }

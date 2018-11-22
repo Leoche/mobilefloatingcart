@@ -21,9 +21,16 @@ class MobilefloatingcartAjaxModuleFrontController extends ModuleFrontController
 
     public function displayAjax()
     {
+        ob_end_clean();
+        header('Content-Type: application/json');
         $this->context->smarty->assign(array(
             'MFC_COLOR' => Configuration::get('MFC_COLOR')
         ));
-        die(Tools::jsonEncode(array('mfc-content' => $this->context->smarty->fetch(_PS_MODULE_DIR_.'mobilefloatingcart/views/templates/hook/mobilefloatingcart-content.tpl'))));
+        die(Tools::jsonEncode(array(
+            'mfc-content' => $this->context->smarty->fetch(
+                _PS_MODULE_DIR_.'mobilefloatingcart/views/templates/hook/mobilefloatingcart-content.tpl'
+            ),
+            'mfc-json' => $this->context->smarty->tpl_vars['cart']->value
+        )));
     }
 }

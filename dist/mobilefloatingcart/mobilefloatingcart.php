@@ -52,15 +52,17 @@ class Mobilefloatingcart extends Module
             && $this->registerHook('displayFooterAfter')
             && $this->registerHook('displayHeader')
             && Configuration::updateValue('MFC_COLOR', '#454545')
+            && Configuration::updateValue('MFC_ICONCOLOR', '#FEFEFE')
             && Configuration::updateValue('MFC_ICON', null)
             && Configuration::updateValue('MFC_HIDDENONCARTEMPTY', false)
-            && Configuration::updateValue('MFC_SHOWONDESKTOP', false)
+            && Configuration::updateValue('MFC_SHOWONDESKTOP', true)
             && Configuration::updateValue('MFC_ZINDEX', 99999);
     }
 
     public function uninstall()
     {
         return Configuration::deleteByName('MFC_COLOR')
+            && Configuration::deleteByName('MFC_ICONCOLOR')
             && Configuration::deleteByName('MFC_ICON')
             && Configuration::deleteByName('MFC_HIDDENONCARTEMPTY')
             && Configuration::deleteByName('MFC_SHOWONDESKTOP')
@@ -82,13 +84,19 @@ class Mobilefloatingcart extends Module
                 } else {
                     $ext = Tools::substr($_FILES['MFC_ICON']['name'], strrpos($_FILES['MFC_ICON']['name'], '.') + 1);
                     $file_name = md5($_FILES['MFC_ICON']['name']).'.'.$ext;
-
-                    if (!move_uploaded_file($_FILES['MFC_ICON']['tmp_name'], dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$file_name)) {
-                        return $this->displayError($this->trans('An error occurred while attempting to upload the file.', array(), 'Admin.Notifications.Error'));
+                    $file_dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR;
+                    if (!move_uploaded_file($_FILES['MFC_ICON']['tmp_name'], $file_dir . $file_name)) {
+                        return $this->displayError(
+                            $this->trans(
+                                'An error occurred while attempting to upload the file.',
+                                array(),
+                                'Admin.Notifications.Error'
+                            )
+                        );
                     } else {
                         if (Configuration::hasContext('MFC_ICON', null, Shop::getContext())
                             && Configuration::get('MFC_ICON', null) != $file_name) {
-                            @unlink(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . Configuration::get('BANNER_IMG', null));
+                            @unlink($file_dir . Configuration::get('BANNER_IMG', null));
                         }
 
                         $values['MFC_ICON'] = $file_name;
@@ -103,16 +111,22 @@ class Mobilefloatingcart extends Module
 
 
             $mfc_color = (string) Tools::getValue('MFC_COLOR');
+            $mfc_iconcolor = (string) Tools::getValue('MFC_ICONCOLOR');
             $mfc_hiddenoncartempty = (string) Tools::getValue('MFC_HIDDENONCARTEMPTY');
             $mfc_showondesktop = (string) Tools::getValue('MFC_SHOWONDESKTOP');
             $mfc_zindex = (string) Tools::getValue('MFC_ZINDEX');
 
             Configuration::updateValue('MFC_COLOR', $mfc_color);
+            Configuration::updateValue('MFC_ICONCOLOR', $mfc_iconcolor);
             Configuration::updateValue('MFC_HIDDENONCARTEMPTY', $mfc_hiddenoncartempty);
             Configuration::updateValue('MFC_SHOWONDESKTOP', $mfc_showondesktop);
             Configuration::updateValue('MFC_ZINDEX', $mfc_zindex);
 
-            return $this->displayConfirmation($this->trans('The settings have been updated.', array(), 'Admin.Notifications.Success'));
+            return $this->displayConfirmation($this->trans(
+                'The settings have been updated.',
+                array(),
+                'Admin.Notifications.Success'
+            ));
         }
 
         return '';
@@ -131,7 +145,11 @@ class Mobilefloatingcart extends Module
         $fields_form = array(
             'form' => array(
                 'legend' => array(
-                    'title' => $this->trans('Mobile floating cart settings', array(), 'Modules.Mobilefloatingcart.Admin'),
+                    'title' => $this->trans(
+                        'Mobile floating cart settings',
+                        array(),
+                        'Modules.Mobilefloatingcart.Admin'
+                    ),
                     'icon' => 'icon-shopping-cart'
                 ),
                 'input' => array(
@@ -141,19 +159,36 @@ class Mobilefloatingcart extends Module
                         'name' => 'MFC_COLOR',
                     ),
                     array(
+                        'type' => 'color',
+                        'label' => $this->trans('Color of icon in button', array(), 'Modules.Mobilefloatingcart.Admin'),
+                        'name' => 'MFC_ICONCOLOR',
+                    ),
+                    array(
                         'type' => 'file',
                         'label' => $this->trans('Icon of button', array(), 'Modules.Mobilefloatingcart.Admin'),
                         'name' => 'MFC_ICON',
                         'required' => false,
-                        'desc' => $this->trans('If no image is set, a default icon from Material Icon will be shown. Recommended: 24px by 24px, transparent PNG', array(), 'Modules.Mobilefloatingcart.Admin'),
+                        'desc' => $this->trans(
+                            'Recommended: 24px by 24px, transparent PNG',
+                            array(),
+                            'Modules.Mobilefloatingcart.Admin'
+                        ),
                     ),
                     array(
                         'type' => 'switch',
-                        'label' => $this->trans('Hidden if cart is empty?', array(), 'Modules.Mobilefloatingcart.Admin'),
+                        'label' => $this->trans(
+                            'Hidden if cart is empty?',
+                            array(),
+                            'Modules.Mobilefloatingcart.Admin'
+                        ),
                         'name' => 'MFC_HIDDENONCARTEMPTY',
                         'required' => true,
                         'is_bool' => true,
-                        'desc' => $this->trans('This will move smoothly the button offscreen if the cart is empty.', array(), 'Modules.Mobilefloatingcart.Admin'),
+                        'desc' => $this->trans(
+                            'This will move smoothly the button offscreen if the cart is empty.',
+                            array(),
+                            'Modules.Mobilefloatingcart.Admin'
+                        ),
                         'values' => array(
                             array(
                                 'id' => 'active_on',
@@ -173,7 +208,11 @@ class Mobilefloatingcart extends Module
                         'name' => 'MFC_SHOWONDESKTOP',
                         'required' => true,
                         'is_bool' => true,
-                        'desc' => $this->trans('This will force the button to be visible on desktops.', array(), 'Modules.Mobilefloatingcart.Admin'),
+                        'desc' => $this->trans(
+                            'This will force the button to be visible on desktops.',
+                            array(),
+                            'Modules.Mobilefloatingcart.Admin'
+                        ),
                         'values' => array(
                             array(
                                 'id' => 'active_ond',
@@ -189,9 +228,17 @@ class Mobilefloatingcart extends Module
                     ),
                     array(
                         'type' => 'text',
-                        'label' => $this->trans('Z-Index of the button', array(), 'Modules.Mobilefloatingcart.Admin'),
+                        'label' => $this->trans(
+                            'Z-Index of the button',
+                            array(),
+                            'Modules.Mobilefloatingcart.Admin'
+                        ),
                         'name' => 'MFC_ZINDEX',
-                        'desc' => $this->trans('Increase the value if this module is displayed below other elements of your theme.', array(), 'Modules.Mobilefloatingcart.Admin'),
+                        'desc' => $this->trans(
+                            'Increase the value if this module is displayed below other elements of your theme.',
+                            array(),
+                            'Modules.Mobilefloatingcart.Admin'
+                        ),
                         'required' => true,
                     ),
                 ),
@@ -220,8 +267,12 @@ class Mobilefloatingcart extends Module
     {
         return array(
             'MFC_COLOR' => Tools::getValue('MFC_COLOR', Configuration::get('MFC_COLOR')),
+            'MFC_ICONCOLOR' => Tools::getValue('MFC_ICONCOLOR', Configuration::get('MFC_ICONCOLOR')),
             'MFC_ICON' => Tools::getValue('MFC_ICON', Configuration::get('MFC_ICON')),
-            'MFC_HIDDENONCARTEMPTY' => Tools::getValue('MFC_HIDDENONCARTEMPTY', Configuration::get('MFC_HIDDENONCARTEMPTY')),
+            'MFC_HIDDENONCARTEMPTY' => Tools::getValue(
+                'MFC_HIDDENONCARTEMPTY',
+                Configuration::get('MFC_HIDDENONCARTEMPTY')
+            ),
             'MFC_SHOWONDESKTOP' => Tools::getValue('MFC_SHOWONDESKTOP', Configuration::get('MFC_SHOWONDESKTOP')),
             'MFC_ZINDEX' => Tools::getValue('MFC_ZINDEX', Configuration::get('MFC_ZINDEX')),
         );
@@ -231,7 +282,10 @@ class Mobilefloatingcart extends Module
     {
         $this->context->smarty->assign(array(
             'MFC_COLOR' => Configuration::get('MFC_COLOR'),
-            'MFC_ICON' => (Configuration::get('MFC_ICON') != null) ? $this->_path . 'img/' . Configuration::get('MFC_ICON') : null,
+            'MFC_ICONCOLOR' => Configuration::get('MFC_ICONCOLOR'),
+            'MFC_ICON' => (Configuration::get('MFC_ICON') != null) ?
+            $this->_path . 'img/' . Configuration::get('MFC_ICON') :
+            null,
             'MFC_HIDDENONCARTEMPTY' => Configuration::get('MFC_HIDDENONCARTEMPTY'),
             'MFC_SHOWONDESKTOP' => Configuration::get('MFC_SHOWONDESKTOP'),
             'MFC_ZINDEX' => Configuration::get('MFC_ZINDEX')
@@ -245,14 +299,14 @@ class Mobilefloatingcart extends Module
         // $this->context->controller->addJS($this->_path.'views/js/mfc.js');
         // $this->context->controller->addCSS($this->_path.'views/css/mfc.css', 'all');
         $this->context->controller->registerJavascript(
-          'mfc-js',
-          'http://localhost:8080/index.js',
-          array('server' => 'remote', 'position' => 'bottom', 'priority' => 150)
-      );
+            'mfc-js',
+            'http://localhost:8080/index.js',
+            array('server' => 'remote', 'position' => 'bottom', 'priority' => 150)
+        );
         $this->context->controller->registerStylesheet(
-          'mfc-css',
-          'http://localhost:8080/style.css',
-          array('server' => 'remote', 'position' => 'top', 'priority' => 150)
-      );
+            'mfc-css',
+            'http://localhost:8080/style.css',
+            array('server' => 'remote', 'position' => 'top', 'priority' => 150)
+        );
     }
 }
