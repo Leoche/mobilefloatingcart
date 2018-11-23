@@ -55,5 +55,8 @@ echo zipping...
 cd dist/
 7z a -r ../mobilefloatingcart.zip *
 
+echo cleaning dist...
+rmdir /s /q dist
+
 echo FINISHH
 pause
