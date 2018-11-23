@@ -56,6 +56,7 @@ cd dist/
 7z a -r ../mobilefloatingcart.zip *
 
 echo cleaning dist...
+cd ..
 rmdir /s /q dist
 
 echo FINISHH

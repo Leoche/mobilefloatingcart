@@ -55,6 +55,7 @@ cd dist/
 zip -r ../mobilefloatingcart.zip *
 
 
+cd ..
 echo cleaning dist...
 rm -rf dist
 
